@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {CustomerService} from '../services/customer.service';
 import {Customer} from '../models/customer.model';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {PanelComponent} from '../../../shared/components/panel/panel.component';
 import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {FormInputComponent} from '../../../shared/components/forms/form-input/form-input.component';
+import {ButtonComponent} from '../../../shared/components/forms/button/button.component';
+import {AlertService} from '../../../shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-customers',
@@ -11,6 +14,8 @@ import {ModalComponent} from '../../../shared/components/modal/modal.component';
     ReactiveFormsModule,
     PanelComponent,
     ModalComponent,
+    FormInputComponent,
+    ButtonComponent,
   ],
   templateUrl: './customers.component.html',
   standalone: true,
@@ -20,11 +25,13 @@ export class CustomersComponent  {
 
   customers!:Array<Customer>;
   searchFormGroup!: FormGroup;
+  customerFormGroup!: FormGroup;
   errorMessage!: string;
   isLoading = false;
   showModal = false;
 
-  constructor(private customerService:CustomerService , private  formBuilder: FormBuilder) {
+  constructor(private customerService:CustomerService , private  formBuilder: FormBuilder,private alertService: AlertService) {
+
   }
 
   ngOnInit() {
@@ -34,7 +41,7 @@ export class CustomersComponent  {
         this.customers= customers;
         this.isLoading = false;
       },error:(err)=>{
-        this.errorMessage = err.message;
+        this.alertService.error("Loading failed",err.message,3000);
         this.isLoading = false;
       }
      }
@@ -42,6 +49,10 @@ export class CustomersComponent  {
     this.searchFormGroup = this.formBuilder.group({
       keyword:this.formBuilder.control(''),
     })
+    this.customerFormGroup = new FormGroup({
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+    });
    }
 
   handleSearchSubmit() {
@@ -51,7 +62,7 @@ export class CustomersComponent  {
         this.customers= customers;
         this.isLoading = false;
       },error:(err)=>{
-        this.errorMessage = err.message;
+        this.alertService.error("An error occurred",err.message,3000);
         this.isLoading = false;
       }
     })
@@ -61,23 +72,40 @@ export class CustomersComponent  {
     if(confirm('Are you sure you want to delete this customer?')) {
       this.customerService.deleteCustomer(id).subscribe({
         next:()=>{
-          this.customers = this.customers.filter(customer => customer.id !== id)
+          this.customers = this.customers.filter(customer => customer.id !== id);
+          this.alertService.success("Success","Customer deleted successfully",3000);
         },
         error: (err) => {
-          console.error("Failed to delete client", err);
-          alert("Une erreur est survenue lors de la suppression.");
+          this.alertService.error("Failed to delete client",err.message,3000);
         }
       });
     }
   }
 
+  handleAddCustomer() {
+    const newCustomer: Customer = this.customerFormGroup.value;
+    if (this.customerFormGroup.valid) {
+      this.customerService.addCustomer(newCustomer).subscribe({
+        next:(customer)=>{
+          console.log(customer);
+          this.customers= this.customers.concat(customer);
+          this.closeModal();
+          this.alertService.success('Success!', 'Data saved successfully');
+        },error:(err)=>{
+          this.errorMessage = err.message;
+          this.alertService.error('Data validation failed', err.message);
+        }
+      })
+    }
+  }
 
   openModal():void{
     this.showModal = true;
-    console.log("modal open")
   }
 
   closeModal():void{
     this.showModal = false;
   }
+
+
 }

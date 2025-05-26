@@ -1,11 +1,13 @@
 import {
+  booleanAttribute,
   Component,
   forwardRef,
   Input,
   OnInit
 } from '@angular/core';
 import {
-  ControlValueAccessor,
+  AbstractControl,
+  ControlValueAccessor, FormControl,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
@@ -25,8 +27,9 @@ export class FormInputComponent implements ControlValueAccessor, OnInit {
   @Input() label: string | null = null;
   @Input() placeholder = '';
   @Input() type = 'text';
-  @Input() required = false;
+  @Input({transform: booleanAttribute}) required = false;
   @Input() name = '';
+  @Input() control: AbstractControl  | null = null;
 
   value: string = '';
   disabled = false;
@@ -56,5 +59,20 @@ export class FormInputComponent implements ControlValueAccessor, OnInit {
     const target = event.target as HTMLInputElement;
     this.value = target.value;
     this.onChange(this.value);
+  }
+
+  getErrorMessage(): string {
+    if (!this.control || !this.control.errors) return '';
+
+    if (this.control.errors['required']) {
+      return `${this.label ?? 'This field'} is required.`;
+    }
+
+    if (this.control.errors['email']) {
+      return `Please enter a valid email address.`;
+    }
+
+    // Add more error types as needed
+    return 'Invalid field';
   }
 }

@@ -26,5 +26,9 @@ export class CustomerService {
     return this.http.delete<any[]>(this.domain + this.prefix + '/'+id);
   }
 
+  public addCustomer(customer:Customer):Observable<any> {
+    return this.http.post<any[]>(this.domain + this.prefix , customer);
+  }
+
 
 }
