@@ -8,17 +8,22 @@ import {Customer} from '../models/customer.model';
 })
 export class CustomerService {
 
-  private domain: string = "http://localhost:8085/api";
+  private domain : string = "http://localhost:8085";
+  private prefix: string = "/api/customers";
 
   constructor(private http: HttpClient) {
 
   }
 
   public getCustomers():Observable<Array<Customer>> {
-    return this.http.get<any[]>(this.domain+'/customers');
+    return this.http.get<any[]>(this.domain + this.prefix);
   }
   public searchCustomers(keyword:string):Observable<Array<Customer>> {
-    return this.http.get<any[]>(this.domain+'/customers/search?keyword='+keyword);
+    return this.http.get<any[]>(this.domain + this.prefix+'/search?keyword='+keyword);
+  }
+
+  public deleteCustomer(id:Number):Observable<any[]> {
+    return this.http.delete<any[]>(this.domain + this.prefix + '/'+id);
   }
 
 
