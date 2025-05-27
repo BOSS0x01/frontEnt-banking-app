@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {catchError, Observable} from 'rxjs';
 import {Customer} from '../models/customer.model';
+import {environment} from '../../../../environments/ environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
 
-  private domain : string = "http://localhost:8085";
-  private prefix: string = "/api/customers";
+  private domain : string = environment.apiUrl;
+  private prefix: string = "/customers";
 
   constructor(private http: HttpClient) {
 

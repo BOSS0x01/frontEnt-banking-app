@@ -27,7 +27,7 @@ export class CustomersComponent  {
   customerToEdit!: Customer;
   searchFormGroup!: FormGroup;
   customerFormGroup!: FormGroup;
-  isLoading = false;
+  isLoading = true;
   showModal = false;
   isEditMode: boolean = false;
 
@@ -37,7 +37,6 @@ export class CustomersComponent  {
   }
 
   ngOnInit() {
-    this.isLoading = true;
      this.customerService.getCustomers().subscribe({
       next:(customers)=>{
         this.customers= customers;

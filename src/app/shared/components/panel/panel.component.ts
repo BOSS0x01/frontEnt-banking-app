@@ -12,5 +12,5 @@ import {NgClass} from '@angular/common';
 })
 export class PanelComponent {
   @Input() title: string = "";
-  @Input() containerClass: string = "";
+  @Input() containerClass = '';
 }

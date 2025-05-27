@@ -1,0 +1,56 @@
+<div class="flex w-full justify-between gap-6">
+  <app-panel title="Acoount operations" class="relative w-2/3">
+    <div class="flex justify-between ">
+      <form [formGroup]="searchFormGroup" method="GET" (ngSubmit)="handleSearchSubmit()">
+        <label class="relative">
+          <input type="text" placeholder="Search by name" name="keyword" class="pr-10 pl-3 py-2 border rounded bg-white "
+                 formControlName="keyword">
+          <button type="submit" class="w-8 aspect-square  my-1 mr-1 rounded bg-blue-500 text-white absolute right-0 "><i
+            class="fas fa-search"></i> </button>
+        </label>
+      </form>
+    </div>
+    <table class="table-auto w-full ">
+      <thead>
+      <tr class="text-left text-gray-600 text-md ">
+        <th class=" p-2">ID</th>
+        <th class=" p-2">Customer</th>
+        <th class=" p-2">Balance</th>
+        <th class=" p-2">Currency</th>
+        <th class=" p-2">Type</th>
+        <th class=" p-2">Status</th>
+        <th class=" p-2">Created at</th>
+      </tr>
+      </thead>
+      <tbody>
+        @if (isLoading) {
+          <div class="flex items-center justify-center absolute left-1/2 top-2">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        }
+
+      <!--      @if(accounts && !isLoading){-->
+
+      <!--        @for (account of accounts ; track account){-->
+      <!--          <tr class="bg-white border-t-2 border-gray-200 group">-->
+      <!--            <td class=" p-2">{{account.id}}</td>-->
+      <!--            <td class=" p-2">{{account.customer.name}}</td>-->
+      <!--            <td class=" p-2">{{account.balance}}</td>-->
+      <!--            <td class=" p-2">{{account.customer}}</td>-->
+      <!--            <td class=" p-2">{{account.type}}</td>-->
+      <!--            <td class=" p-2">{{account.status}}</td>-->
+      <!--            <td class=" p-2">{{account.createdAt}}</td>-->
+      <!--            &lt;!&ndash;            <td class=" p-2">{{account.}}</td>&ndash;&gt;-->
+      <!--            <td class=" p-2 space-x-2 opacity-0  group-hover:opacity-100">-->
+
+      <!--            </td>-->
+      <!--          </tr>-->
+      <!--        }-->
+      <!--      }-->
+      </tbody>
+    </table>
+  </app-panel>
+  <app-panel  title="Account details" class="w-1/3">
+
+  </app-panel>
+</div>
