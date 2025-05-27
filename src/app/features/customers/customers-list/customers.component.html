@@ -8,7 +8,7 @@
             class="fas fa-search"></i> </button>
       </label>
     </form>
-    <button (click)="openModal()"
+    <button (click)="openAddModal()"
       class="w-10 aspect-square my-2 border rounded bg-blue-500 text-white flex items-center justify-center">
       <i class="fas fa-add"></i>
     </button>
@@ -39,7 +39,7 @@
           <button (click)="handleDelete(customer.id)" class="bg-red-500 text-white text-xs rounded py-1 px-2">
             <a> <i class="fa fa-trash"></i> </a>
           </button>
-          <button class="bg-blue-500 text-white text-xs rounded py-1 px-2">
+          <button (click)="openEditModal(customer)" class="bg-blue-500 text-white text-xs rounded py-1 px-2">
             <a> <i class="fa fa-edit"></i> </a>
           </button>
         </td>
@@ -50,10 +50,32 @@
   </table>
 </app-panel>
 
-<app-modal title="Add a new customer" [open]="showModal" (close)="closeModal()">
-  <form [formGroup]="customerFormGroup" method="post" class="space-x-4" (ngSubmit)="handleAddCustomer()">
-    <app-form-input label="Full Name" formControlName="name" placeholder="Type you full name here" [control]="customerFormGroup.get('name')" required />
+
+<app-modal [title]="isEditMode ? 'Edit Customer' : 'Add Customer'" [open]="showModal" (close)="closeModal()">
+  <form [formGroup]="customerFormGroup" (ngSubmit)="handleSaveCustomer()" class="space-x-4">
+
+    <app-form-input label="Full Name" formControlName="name" placeholder="Type your full name here" [control]="customerFormGroup.get('name')" required />
     <app-form-input label="Email" formControlName="email" placeholder="example@xyz.abc" [control]="customerFormGroup.get('email')" required />
-    <app-button label="Add" [customClass]="'ml-auto'" ></app-button>
+    <app-button
+      [label]="isEditMode ? 'Update' : 'Add'"
+      [customClass]="'ml-auto'"
+      [disabled]="!customerFormGroup.valid || (isEditMode && customerFormGroup.pristine)"
+    ></app-button>
   </form>
 </app-modal>
+
+<!--<app-modal title="Edit customer" [open]="showModal" (close)="closeModal()">-->
+<!--  <form [formGroup]="customerFormGroup" method="post" class="space-x-4" (ngSubmit)="handleSaveCustomer()">-->
+<!--    <app-form-input label="Full Name" formControlName="name" placeholder="Type you full name here" [control]="customerFormGroup.get('name')" required />-->
+<!--    <app-form-input label="Email" formControlName="email" placeholder="example@xyz.abc" [control]="customerFormGroup.get('email')" required />-->
+<!--    <app-button label="Add" [customClass]="'ml-auto'" [disabled]="!customerFormGroup.valid" ></app-button>-->
+<!--  </form>-->
+<!--</app-modal>-->
+
+<!--<app-modal title="Add a new customer" [open]="showModal" (close)="closeModal()">-->
+<!--  <form [formGroup]="customerFormGroup" method="post" class="space-x-4" (ngSubmit)="handleSaveCustomer()">-->
+<!--    <app-form-input label="Full Name" formControlName="name" placeholder="Type you full name here" [control]="customerFormGroup.get('name')" required />-->
+<!--    <app-form-input label="Email" formControlName="email" placeholder="example@xyz.abc" [control]="customerFormGroup.get('email')" required />-->
+<!--    <app-button label="Add" [customClass]="'ml-auto'" [disabled]="!customerFormGroup.valid" ></app-button>-->
+<!--  </form>-->
+<!--</app-modal>-->

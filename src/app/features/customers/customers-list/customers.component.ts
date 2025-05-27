@@ -24,11 +24,13 @@ import {AlertService} from '../../../shared/components/alert/alert.service';
 export class CustomersComponent  {
 
   customers!:Array<Customer>;
+  customerToEdit!: Customer;
   searchFormGroup!: FormGroup;
   customerFormGroup!: FormGroup;
-  errorMessage!: string;
   isLoading = false;
   showModal = false;
+  isEditMode: boolean = false;
+
 
   constructor(private customerService:CustomerService , private  formBuilder: FormBuilder,private alertService: AlertService) {
 
@@ -49,10 +51,11 @@ export class CustomersComponent  {
     this.searchFormGroup = this.formBuilder.group({
       keyword:this.formBuilder.control(''),
     })
-    this.customerFormGroup = new FormGroup({
-      name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-    });
+    this.customerFormGroup = this.formBuilder.group({
+      id: this.formBuilder.control(null),
+      name: this.formBuilder.control('',[Validators.required]),
+      email: this.formBuilder.control('',[Validators.email,Validators.required]),
+    })
    }
 
   handleSearchSubmit() {
@@ -82,30 +85,44 @@ export class CustomersComponent  {
     }
   }
 
-  handleAddCustomer() {
-    const newCustomer: Customer = this.customerFormGroup.value;
+  handleSaveCustomer() {
+    const customer: Customer = this.customerFormGroup.value;
     if (this.customerFormGroup.valid) {
-      this.customerService.addCustomer(newCustomer).subscribe({
-        next:(customer)=>{
-          console.log(customer);
-          this.customers= this.customers.concat(customer);
-          this.closeModal();
-          this.alertService.success('Success!', 'Data saved successfully');
-        },error:(err)=>{
-          this.errorMessage = err.message;
-          this.alertService.error('Data validation failed', err.message);
-        }
-      })
+        this.customerService.saveCustomer(customer,this.isEditMode).subscribe({
+          next:(customer)=>{
+            const index = this.customers.findIndex(c => c.id === customer.id);
+            if (index !== -1) {
+              this.customers[index] = customer;
+            } else {
+              this.customers.push(customer);
+            }
+            this.closeModal();
+            this.alertService.success('Success!', 'Customer has been saved successfully');
+            this.customerFormGroup.reset();
+          },error:(err)=>{
+            this.alertService.error('Server error', err.message);
+          }
+        })
+    }else{
+      this.alertService.error('Data validation failed',"error");
     }
   }
 
-  openModal():void{
+  openAddModal():void{
+    this.isEditMode=false;
     this.showModal = true;
   }
 
   closeModal():void{
     this.showModal = false;
+    this.customerFormGroup.reset();
   }
 
+  openEditModal(customer: Customer) {
+    this.isEditMode = true;
+    this.customerFormGroup.patchValue(customer);
+    console.log(this.customerFormGroup.value)
+    this.showModal = true;
+  }
 
 }

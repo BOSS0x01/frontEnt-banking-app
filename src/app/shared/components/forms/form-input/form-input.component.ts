@@ -71,8 +71,6 @@ export class FormInputComponent implements ControlValueAccessor, OnInit {
     if (this.control.errors['email']) {
       return `Please enter a valid email address.`;
     }
-
-    // Add more error types as needed
     return 'Invalid field';
   }
 }

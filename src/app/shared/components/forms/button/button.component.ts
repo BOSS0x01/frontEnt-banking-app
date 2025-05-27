@@ -11,4 +11,5 @@ export class ButtonComponent {
   @Input() label = '';
   @Input() icon = '';
   @Input() customClass = '';
+  @Input() disabled!: boolean ;
 }
