@@ -1,8 +1,9 @@
 import {AccountOperation} from './accountOperation.model';
+import {Account} from './account.model';
 
 export interface AccountHistory {
- accountId:number;
- balance:number;
+ accountId:string;
+ bankAccount:Account;
  pageSize:number;
  currentPage:number;
  totalPages:number;

@@ -1,0 +1,40 @@
+<nav *ngIf="totalPages > 1">
+  <ul class="my-4 flex justify-center items-center ">
+
+    <!-- Previous -->
+    <li>
+      <button
+        class="select-none bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-l-lg  py-2 px-3 transition-colors"
+        [class.pointer-events-none]="currentPage === 0"
+        [class.opacity-50]="currentPage === 0"
+        (click)="goToPage(currentPage - 1)">
+        Previous
+      </button>
+    </li>
+
+    <!-- Page Numbers -->
+    <li *ngFor="let i of pagesArray()">
+      <button
+        (click)="goToPage(i)"
+        class="py-2 px-3 border transition-colors"
+        [ngClass]="{
+          'bg-blue-50 border-blue-300 text-blue-600 hover:bg-blue-100 hover:text-blue-700': currentPage === i,
+          'bg-white border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700': currentPage !== i
+        }">
+        {{ i + 1 }}
+      </button>
+    </li>
+
+    <!-- Next -->
+    <li>
+      <button
+        class="select-none bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-r-lg py-2 px-3 transition-colors"
+        [class.pointer-events-none]="currentPage === totalPages - 1"
+        [class.opacity-50]="currentPage === totalPages - 1"
+        (click)="goToPage(currentPage + 1)">
+        Next
+      </button>
+    </li>
+
+  </ul>
+</nav>

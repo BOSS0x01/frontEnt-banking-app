@@ -6,5 +6,5 @@ import {AccountDetailsComponent} from './features/accounts/account-details/accou
 export const routes: Routes = [
     { path:"customers", component: CustomersComponent },
     { path:"accounts", component: AccountsComponent },
-    { path:"accountDetails", component: AccountDetailsComponent },
+    { path:"accountDetails/:id", component: AccountDetailsComponent },
 ];
