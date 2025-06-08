@@ -61,7 +61,7 @@ export class CustomersComponent  {
     let keyword = this.searchFormGroup.value.keyword;
     this.customerService.searchCustomers(keyword).subscribe({
       next:(customers)=>{
-        this.customers= customers;
+        this.customers = customers;
         this.isLoading = false;
       },error:(err)=>{
         this.alertService.error("An error occurred",err.message,3000);

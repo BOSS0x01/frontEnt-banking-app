@@ -38,12 +38,11 @@
           <tr class="bg-white border-t-2 border-gray-200 group">
             <td class=" p-2">{{account.id}}</td>
             <td class=" p-2">{{account.customer.name}}</td>
-            <td class=" p-2">{{account.balance}}</td>
-            <td class=" p-2">{{account.customer}}</td>
+            <td class=" p-2">{{account.balance | number: "1.2-2"}}</td>
+            <td class=" p-2">{{account.currency}}</td>
             <td class=" p-2">{{account.type}}</td>
             <td class=" p-2">{{account.status}}</td>
-            <td class=" p-2">{{account.createdAt}}</td>
-<!--            <td class=" p-2">{{account.}}</td>-->
+            <td class=" p-2">{{account.createdAt | date:'dd-MM-yyyy:HH-mm-ss' }}</td>
             <td class=" p-2 space-x-2 opacity-0  group-hover:opacity-100">
               <button [routerLink]="['/accountDetails', account.id]" class="bg-gray-500 text-white text-xs rounded py-1 px-2">
                 <a> <i class="fa fa-eye"></i> </a>
@@ -61,3 +60,7 @@
     </tbody>
   </table>
 </app-panel>
+
+<app-modal title="add a new " [open]="showModal" (close)="closeModal()">
+
+</app-modal>

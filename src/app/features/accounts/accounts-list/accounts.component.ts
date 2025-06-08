@@ -6,13 +6,18 @@ import {AccountService} from '../services/account.service';
 import {AlertService} from '../../../shared/components/alert/alert.service';
 import {PanelComponent} from '../../../shared/components/panel/panel.component';
 import {RouterLink} from '@angular/router';
+import {DatePipe, DecimalPipe} from "@angular/common";
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-accounts',
   imports: [
     PanelComponent,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    DecimalPipe,
+    DatePipe,
+    ModalComponent
   ],
   templateUrl: './accounts.component.html',
   standalone: true,
@@ -23,7 +28,7 @@ export class AccountsComponent {
   searchFormGroup!: FormGroup;
   isLoading: boolean=true;
   accounts: Array<Account> = [];
-
+  showModal: boolean = false;
 
   constructor(private accountService: AccountService,private alertService: AlertService,private formBuilder:FormBuilder) {}
 
@@ -47,11 +52,22 @@ export class AccountsComponent {
   }
 
   handleSearchSubmit() {
+    let accountId = this.searchFormGroup.value.keyword;
+    if (accountId != ""){
 
+    this.accountService.getAccount(accountId).subscribe({
+      next:(account)=>{
+        this.accounts =  this.accounts.filter(a => a.id == account.id);
+        console.log(account);
+      }
+    })
+    }else {
+      this.loadAccounts();
+    }
   }
 
   openAddModal() {
-
+    this.showModal = true;
   }
 
   openEditModal(account: any) {
@@ -60,5 +76,9 @@ export class AccountsComponent {
 
   handleDelete(id: any) {
 
+  }
+
+  closeModal(){
+    this.showModal = false;
   }
 }

@@ -1,14 +1,9 @@
 <div class="flex w-full justify-between gap-6">
   <app-panel title="Acoount operations" class="relative w-2/3">
-    <div class="flex justify-between ">
-      <form [formGroup]="searchFormGroup" method="GET" (ngSubmit)="handleSearchSubmit()">
-        <label class="relative">
-          <input type="text" placeholder="Search by name" name="keyword" class="pr-10 pl-3 py-2 border rounded bg-white "
-                 formControlName="keyword">
-          <button type="submit" class="w-8 aspect-square  my-1 mr-1 rounded bg-blue-500 text-white absolute right-0 "><i
-            class="fas fa-search"></i> </button>
-        </label>
-      </form>
+    <div class="flex  space-x-2 justify-end mb-4">
+      <app-button (click)="openModal('credit')" label="credit" />
+      <app-button (click)="openModal('debit')" label="debit" />
+      <app-button (click)="openModal('transfer')" label="transfer" />
     </div>
     <table class="table-auto w-full ">
       <thead>
@@ -26,14 +21,13 @@
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         }
-
             @if(accountHistory && !isLoading){
 
               @for (operation of accountHistory.accountOperations ; track operation.id){
                 <tr class="bg-white border-t-2 border-gray-200 group">
                   <td class=" p-2">{{operation.id}}</td>
                   <td class=" p-2">{{operation.date | date:'dd-MM-yyyy----HH-mm-ss'}}</td>
-                  <td class=" p-2">{{operation.amount}}</td>
+                  <td class=" p-2">{{operation.amount | number: "1.2-2"}}</td>
                   <td class=" p-2">{{operation.type}}</td>
                   <td class=" p-2">{{operation.description}}</td>
                 </tr>
@@ -62,7 +56,7 @@
 
       <div class="bg-gray-50 rounded-lg p-4">
         <label class="block text-sm font-medium text-gray-600 mb-1">Created At</label>
-        <div class="text-lg text-gray-900">{{accountHistory.bankAccount.createdAt}}</div>
+        <div class="text-md text-gray-900">{{accountHistory.bankAccount.createdAt | date:'dd-MM-yyyy:HH-mm-ss'}}</div>
       </div>
 
       <div class="bg-gray-50 rounded-lg p-4">
@@ -95,4 +89,19 @@
       </div>
     </div>
   </app-panel>
+
+  <app-modal [title]="accountOperationType" [open]="showModal" (close)="closeModal()">
+    <form [formGroup]="accountOperationFormGroup" (ngSubmit)="handleSaveAccountOperation()" class="space-x-6">
+      <app-form-input label="Operation Amount" formControlName="amount" placeholder="ex:499$" [control]="accountOperationFormGroup.get('amount')" required />
+      @if (accountOperationType == 'transfer'){
+        <app-form-input label="Destination Account" formControlName="accountDestination"  [control]="accountOperationFormGroup.get('accountDestination')"  />
+      }
+      <app-form-input label="Description" formControlName="description"  [control]="accountOperationFormGroup.get('description')"  />
+      <app-button
+        label="Save Operation"
+        [customClass]="'ml-auto'"
+      ></app-button>
+    </form>
+  </app-modal>
+
 </div>
