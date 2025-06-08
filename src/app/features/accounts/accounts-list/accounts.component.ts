@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Account} from '../models/account.model';
-import {CustomerService} from '../../customers/services/customer.service';
 import {AccountService} from '../services/account.service';
 import {AlertService} from '../../../shared/components/alert/alert.service';
 import {PanelComponent} from '../../../shared/components/panel/panel.component';
 import {RouterLink} from '@angular/router';
 import {DatePipe, DecimalPipe} from "@angular/common";
 import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {ButtonComponent} from '../../../shared/components/forms/button/button.component';
+import {FormInputComponent} from '../../../shared/components/forms/form-input/form-input.component';
+import {FormSelectComponent} from '../../../shared/components/forms/form-select/form-select.component';
+import {CustomerService} from '../../customers/services/customer.service';
+import {Customer} from '../../customers/models/customer.model';
+import {FormRadioComponent} from '../../../shared/components/forms/form-radio/form-radio.component';
 
 @Component({
   selector: 'app-accounts',
@@ -17,7 +22,12 @@ import {ModalComponent} from '../../../shared/components/modal/modal.component';
     RouterLink,
     DecimalPipe,
     DatePipe,
-    ModalComponent
+    ModalComponent,
+    ButtonComponent,
+    FormInputComponent,
+    FormSelectComponent,
+    FormsModule,
+    FormRadioComponent
   ],
   templateUrl: './accounts.component.html',
   standalone: true,
@@ -29,14 +39,25 @@ export class AccountsComponent {
   isLoading: boolean=true;
   accounts: Array<Account> = [];
   showModal: boolean = false;
+  isEditMode: boolean = false;
+  accountFormGroup!: FormGroup;
+  customers: Array<Customer> = [];
 
-  constructor(private accountService: AccountService,private alertService: AlertService,private formBuilder:FormBuilder) {}
+  constructor(private accountService: AccountService,private alertService: AlertService,private formBuilder:FormBuilder,private customerService:CustomerService) {}
 
   ngOnInit() {
     this.loadAccounts();
 
     this.searchFormGroup = this.formBuilder.group({
       keyword:this.formBuilder.control(''),
+    })
+
+    this.accountFormGroup = this.formBuilder.group({
+      customer:this.formBuilder.control(null),
+      initialBalance:this.formBuilder.control(0),
+      accountType:this.formBuilder.control(null),
+      //can be either overdraft or interest rate depending on the account type
+      attribute:this.formBuilder.control(null),
     })
   }
 
@@ -49,6 +70,16 @@ export class AccountsComponent {
         this.alertService.error("A server error occurred",err.message,3000);
       }
     })
+  }
+
+  loadCustomers():void{
+    this.customerService.getCustomers().subscribe({
+      next:(customers)=>{
+        this.customers= customers;
+      },error:(err)=>{
+        this.alertService.error("Loading failed",err.message,3000);
+      }
+    });
   }
 
   handleSearchSubmit() {
@@ -67,6 +98,7 @@ export class AccountsComponent {
   }
 
   openAddModal() {
+    this.loadCustomers();
     this.showModal = true;
   }
 
@@ -80,5 +112,9 @@ export class AccountsComponent {
 
   closeModal(){
     this.showModal = false;
+  }
+
+  handleSaveAccount() {
+
   }
 }

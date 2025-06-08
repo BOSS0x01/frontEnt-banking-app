@@ -40,7 +40,7 @@ export class AlertService {
     });
   }
 
-  error(title: string, message: string, duration: number = 0): void {
+  error(title: string, message: string, duration: number = 9000): void {
     this.addAlert({
       type: 'error',
       title,

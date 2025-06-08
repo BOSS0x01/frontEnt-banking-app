@@ -61,6 +61,40 @@
   </table>
 </app-panel>
 
-<app-modal title="add a new " [open]="showModal" (close)="closeModal()">
+<app-modal [title]="isEditMode ? 'Update account' : 'Add a new account'" [open]="showModal" (close)="closeModal()">
+  <form [formGroup]="accountFormGroup" (ngSubmit)="handleSaveAccount()" class="space-x-6 space-y-6">
+    <app-form-radio
+      name="accountType"
+      [label]="'Account Type'"
+      [required]="true"
+      [control]="accountFormGroup.controls['accountType']"
+      [options]="[
+        { value: 'savingAccount', label: 'Saving Account' },
+        { value: 'currentAccount', label: 'Current Account' }
+  ]"
+    >
+    </app-form-radio>
 
+    <app-form-select
+      name="country"
+      [label]="'Customer'"
+      [placeholder]="'Choose a Customer'"
+      [required]="true"
+      [control]="accountFormGroup.controls['customer']"
+
+    >
+      @if(customers){
+        @for(customer of customers; track customer.id){
+          <option [value]="customer.id">{{ customer.name }}</option>
+        }
+      }
+    </app-form-select>
+
+    <app-form-input label="Initial balance" formControlName="initialBalance" placeholder="Type the initial balance here" [control]="accountFormGroup.get('initialBalance')" required />
+    <app-form-input label="selected attribute" formControlName="attribute" placeholder="enter your value here" [control]="accountFormGroup.get('attribute')" required />
+    <app-button
+      [label]="isEditMode ? 'Update' : 'Add'"
+      [customClass]="'ml-auto'"
+    ></app-button>
+  </form>
 </app-modal>
