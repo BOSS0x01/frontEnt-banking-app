@@ -62,15 +62,15 @@
 </app-panel>
 
 <app-modal [title]="isEditMode ? 'Update account' : 'Add a new account'" [open]="showModal" (close)="closeModal()">
-  <form [formGroup]="accountFormGroup" (ngSubmit)="handleSaveAccount()" class="space-x-6 space-y-6">
+  <form [formGroup]="accountFormGroup" (ngSubmit)="handleSaveAccount()" class="space-x-4 space-y-4">
     <app-form-radio
       name="accountType"
       [label]="'Account Type'"
       [required]="true"
       [control]="accountFormGroup.controls['accountType']"
       [options]="[
-        { value: 'savingAccount', label: 'Saving Account' },
-        { value: 'currentAccount', label: 'Current Account' }
+        { value: 'currentAccount', label: 'Current Account' },
+        { value: 'savingAccount', label: 'Saving Account' }
   ]"
     >
     </app-form-radio>
@@ -80,7 +80,7 @@
       [label]="'Customer'"
       [placeholder]="'Choose a Customer'"
       [required]="true"
-      [control]="accountFormGroup.controls['customer']"
+      [control]="accountFormGroup.controls['customerId']"
 
     >
       @if(customers){
@@ -89,9 +89,8 @@
         }
       }
     </app-form-select>
-
     <app-form-input label="Initial balance" formControlName="initialBalance" placeholder="Type the initial balance here" [control]="accountFormGroup.get('initialBalance')" required />
-    <app-form-input label="selected attribute" formControlName="attribute" placeholder="enter your value here" [control]="accountFormGroup.get('attribute')" required />
+    <app-form-input [label]="attributeLabel" formControlName="attribute" placeholder="enter your value here" [control]="accountFormGroup.get('attribute')" required />
     <app-button
       [label]="isEditMode ? 'Update' : 'Add'"
       [customClass]="'ml-auto'"

@@ -15,7 +15,6 @@ export class FormRadioComponent  implements ControlValueAccessor {
   @Input() name!: string;
   @Input() label?: string;
   @Input() required = false;
-  @Input() disabled = false;
   @Input() control: any;
   @Input() options: { value: string; label: string }[] = [];
 

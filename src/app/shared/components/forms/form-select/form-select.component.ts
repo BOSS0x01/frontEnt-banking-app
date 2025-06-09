@@ -16,7 +16,6 @@ export class FormSelectComponent implements ControlValueAccessor {
   @Input() placeholder?: string;
   @Input() name!: string;
   @Input() required?: boolean = false;
-  @Input() disabled = false;
   @Input() control: any;
 
   value: string | null = null;

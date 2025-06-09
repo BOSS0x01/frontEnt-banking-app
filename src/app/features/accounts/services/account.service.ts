@@ -46,4 +46,10 @@ export class AccountService {
     return this.http.get<Account>(this.domain + this.prefix+"/"+accountId);
   }
 
+  public saveAccount(accountType: string,initialBalance:number,attribute:number,customerId:number):Observable<Account> {
+    return this.http.post<Account>(this.domain + this.prefix,{accountType,initialBalance,attribute,customerId});
+  }
+
+
+
 }

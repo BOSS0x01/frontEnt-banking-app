@@ -42,6 +42,7 @@ export class AccountsComponent {
   isEditMode: boolean = false;
   accountFormGroup!: FormGroup;
   customers: Array<Customer> = [];
+  attributeLabel: string = "overdraft";
 
   constructor(private accountService: AccountService,private alertService: AlertService,private formBuilder:FormBuilder,private customerService:CustomerService) {}
 
@@ -53,12 +54,25 @@ export class AccountsComponent {
     })
 
     this.accountFormGroup = this.formBuilder.group({
-      customer:this.formBuilder.control(null),
+      customerId:this.formBuilder.control(null),
       initialBalance:this.formBuilder.control(0),
-      accountType:this.formBuilder.control(null),
+      accountType:this.formBuilder.control('currentAccount'),
       //can be either overdraft or interest rate depending on the account type
-      attribute:this.formBuilder.control(null),
+      attribute:this.formBuilder.control(0),
+
     })
+    this.accountFormGroup.get('accountType')?.valueChanges.subscribe(
+      value =>{
+        if(value ){
+          if(value == "currentAccount"){
+            this.attributeLabel = "overdraft"
+          }else if(value == "savingAccount"){
+            this.attributeLabel = "interest rate"
+
+          }
+        }
+      }
+    )
   }
 
    loadAccounts(){
@@ -115,6 +129,18 @@ export class AccountsComponent {
   }
 
   handleSaveAccount() {
+    let accountType = this.accountFormGroup.get('accountType')?.value;
+    let attribute = this.accountFormGroup.get('attribute')?.value;
+    let initialBalance = this.accountFormGroup.get('initialBalance')?.value;
+    let customerId = this.accountFormGroup.get('customerId')?.value;
 
+    this.accountService.saveAccount(accountType,initialBalance,attribute,customerId).subscribe({
+      next:(account)=> {
+        this.loadAccounts();
+        this.alertService.success("Success","Account saved successfully!");
+      },error:(err)=>{
+        this.alertService.error("An error occurred",err.message);
+      }
+    })
   }
 }
